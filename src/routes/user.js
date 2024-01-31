@@ -8,7 +8,7 @@ router.post('/profile', authChecker, validate(userValidation.postProfile), userC
 
 router.get('/profile', authChecker, userController.getProfile)
 
-router.put('/profile', authChecker, validate(userValidation.updateprofile), userController.updateProfile)
+router.put('/profile', authChecker, validate(userValidation.updateProfile), userController.updateProfile)
 
 router.delete('/profile', authChecker, userController.deleteProfile)
 

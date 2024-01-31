@@ -24,7 +24,7 @@ const verifyToken = (token, secret) => {
                 reject(new ApiError(err.message, httpStatus.UNAUTHORIZED))
             } else {
                 userService.getTokenByUserId(decoded.sub).then((user) => {
-                    if (user.token !== token) {
+                    if (user && user.token !== token) {
                         reject(new ApiError(constant.MESSAGES.INVALID_TOKEN, httpStatus.UNAUTHORIZED))
                     }
                     resolve(decoded)
