@@ -6,14 +6,27 @@ const constant = require('../constants')
 const ApiError = require('../utils/ApiError')
 const User = require('../models/user')
 
-exports.getUserById = async (userId) => {
+exports.getUserById = async (id) => {
+
+    const query = {
+        _id: new mongoose.Types.ObjectId(id)
+    }
+
+    const data = {
+        _id: 1
+    }
+
+    return dbRepo.findOne(constant.COLLECTIONS.USER, { query, data })
+}
+
+exports.getisProfileCompletedByUserId = async (userId) => {
 
     const query = {
         _id: new mongoose.Types.ObjectId(userId)
     }
 
     const data = {
-        _id: 1
+        isProfileCompleted: 1
     }
 
     return dbRepo.findOne(constant.COLLECTIONS.USER, { query, data })
@@ -26,6 +39,7 @@ exports.getUserByEmail = async (email) => {
 
     const data = {
         password: 1,
+        role: 1,
         isProfileCompleted: 1
     }
 
@@ -160,11 +174,23 @@ exports.updateUser = async (userId, userBody) => {
     }
 }
 
-exports.deleteUserById = async (userId) => {
+exports.getTokenByUserId = async (userId) => {
+    const query = {
+        _id: new mongoose.Types.ObjectId(userId)
+    }
+
+    const data = {
+        token: 1
+    }
+
+    return dbRepo.findOne(constant.COLLECTIONS.USER, { query, data })
+}
+
+exports.deleteUserById = async (id) => {
     console.info('Inside deleteUserById')
 
     const query = {
-        _id: new mongoose.Types.ObjectId(userId)
+        _id: new mongoose.Types.ObjectId(id)
     }
     return dbRepo.deleteOne(constant.COLLECTIONS.USER, { query })
 }

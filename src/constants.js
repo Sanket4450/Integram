@@ -13,6 +13,7 @@ module.exports = {
         TOKEN_EXPIRED: 'Token has expired',
         INVALID_SECRET: 'Invalid admin secret, admin authentication failed!',
         NOT_ALLOWED: 'You are not allowed to access this resource',
+        PROFILE_ALREADY_CREATED: 'Profile already created',
     },
 
     COLLECTIONS: {

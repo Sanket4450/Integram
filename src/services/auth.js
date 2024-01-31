@@ -91,21 +91,3 @@ exports.resetPassword = async ({ token, password }) => {
 
     await userService.updatePassword(sub, password)
 }
-
-exports.refreshTokens = async (token) => {
-    console.info(`Inside refreshTokens => token = ${token}`)
-
-    const { sub } = await tokenService.verifyToken(token, process.env.REFRESH_TOKEN_SECRET)
-
-    const user = await userService.getFullUserById(sub, { role: 1, token: 1 })
-
-    if (!user) {
-        throw new ApiError(constant.MESSAGES.USER_NOT_EXIST, httpStatus.CONFLICT)
-    }
-
-    if (token !== user.token) {
-        throw new ApiError(constant.MESSAGES.INVALID_TOKEN, httpStatus.UNAUTHORIZED)
-    }
-
-    return user
-}

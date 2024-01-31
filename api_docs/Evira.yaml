@@ -43,7 +43,7 @@ paths:
                 password: user1234
       responses:
         '200':
-          description: Tokens Object
+          description: Token Object
           content:
             application/json: {}
   /auth/login:
@@ -69,7 +69,7 @@ paths:
                 password: user1234
       responses:
         '200':
-          description: Tokens Object with isProfileCompleted flag
+          description: Object with Token & isProfileCompleted property
           content:
             application/json: {}
   /auth/forgot-password/email:
@@ -164,26 +164,6 @@ paths:
       responses:
         '200':
           description: Success response
-          content:
-            application/json: {}
-  /auth/refresh-tokens:
-    post:
-      tags:
-        - Auth
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                token:
-                  type: string
-                  format: token
-              required:
-                - token
-      responses:
-        '200':
-          description: Access & Refresh Token Objects
           content:
             application/json: {}
   /auth/logout:

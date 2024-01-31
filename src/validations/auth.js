@@ -55,18 +55,11 @@ const resetPassword = {
     })
 }
 
-const refreshTokens = {
-    body: joi.object().keys({
-        token: stringReqValidation
-    })
-}
-
 module.exports = {
     register,
     login,
     forgotPasswordWithEmail,
     forgotPasswordWithMobile,
     verifyResetOtp,
-    resetPassword,
-    refreshTokens
+    resetPassword
 }

@@ -10,10 +10,14 @@ const {
 exports.postProfile = catchAsyncErrors(async (req, res) => {
     const body = req.body
 
-    let user = await userService.getUserById(req.user.sub)
+    let user = await userService.getisProfileCompletedByUserId(req.user.sub)
 
     if (!user) {
         throw new ApiError(constant.MESSAGES.USER_NOT_EXIST, httpStatus.NOT_FOUND)
+    }
+
+    if (user.isProfileCompleted) {
+        throw new ApiError(constant.MESSAGES.PROFILE_ALREADY_CREATED, httpStatus.BAD_REQUEST)
     }
 
     await userService.updateUser(user._id, { ...body, isProfileCompleted: true })

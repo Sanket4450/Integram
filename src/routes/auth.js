@@ -16,8 +16,6 @@ router.post('/verify-reset-otp', validate(authValidation.verifyResetOtp), authCo
 
 router.put('/reset-password', validate(authValidation.resetPassword), authController.resetPassword)
 
-router.post('/refresh-tokens', validate(authValidation.refreshTokens), authController.refreshTokens)
-
 router.post('/logout', authChecker, authController.logout)
 
 module.exports = router
