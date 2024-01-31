@@ -7,6 +7,7 @@ info:
     email: talaviyasanket01@gmail.com
   }
 servers:
+  - url: https://integram-puez.onrender.com/api/v1
   - url: http://localhost:9000/api/v1
 components:
   securitySchemes:
