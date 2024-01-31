@@ -1,0 +1,332 @@
+openapi: 3.0.0
+info:
+  title: Integram
+  version: 1.0.0
+  description: Integram APIs with Swagger
+  contact: {
+    email: talaviyasanket01@gmail.com
+  }
+servers:
+  - url: http://localhost:9000/api/v1
+components:
+  securitySchemes:
+    userAuth:
+      type: http
+      scheme: bearer
+    adminAuth:
+      type: http
+      scheme: bearer
+tags:
+  - name: Auth
+  - name: Users
+paths:
+  /auth/register:
+    post:
+      tags:
+        - Auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+              required:
+                - email
+                - password
+              example:
+                email: example_user@gmail.com
+                password: user1234
+      responses:
+        '200':
+          description: Tokens Object
+          content:
+            application/json: {}
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string,
+                  format: email
+                password:
+                  type: string
+              required:
+                - email
+                - password
+              example:
+                email: user1@gmail.com
+                password: user1234
+      responses:
+        '200':
+          description: Tokens Object with isProfileCompleted flag
+          content:
+            application/json: {}
+  /auth/forgot-password/email:
+    post:
+      tags:
+        - Auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+              required:
+                - email
+              example:
+                email: user1@gmail.com
+      responses:
+        '200':
+          description: Success response with reset Token
+          content:
+            application/json: {}
+  /auth/forgot-password/mobile:
+    post:
+      tags:
+        - Auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                mobile: number
+                format: mobile
+              required:
+                - mobile
+              example:
+                mobile: 9876543210
+      responses:
+        '200':
+          description: Success response with reset Token
+          content:
+            application/json: {}
+  /auth/verify-reset-otp:
+    post:
+      tags:
+        - Auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  format: token
+                otp:
+                  type: integer
+                  format: otp
+              required:
+                - token
+                - otp
+              example:
+                otp: 1234
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json: {}
+  /auth/reset-password:
+    put:
+      tags:
+        - Auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  format: token
+                password:
+                  type: string
+              required:
+                - token
+                - password
+              example:
+                password: user5678
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json: {}
+  /auth/refresh-tokens:
+    post:
+      tags:
+        - Auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  format: token
+              required:
+                - token
+      responses:
+        '200':
+          description: Access & Refresh Token Objects
+          content:
+            application/json: {}
+  /auth/logout:
+    post:
+      tags:
+        - Auth
+      security:
+        - userAuth: []
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json: {}
+  /users/profile:
+    post:
+      tags:
+        - Users
+      security:
+        - userAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fullName:
+                  type: string
+                nickName:
+                  type: string
+                profileImage:
+                  type: string
+                dateOfBirth:
+                  type: string
+                  format: date
+                mobile:
+                  type: number
+                country:
+                  type: string
+                occupation:
+                  type: string 
+                required:
+                  - fullName
+                  - nickName
+                  - profileImage
+                  - dateOfBirth
+                  - mobile
+                  - country
+                  - occupation
+              example:
+                fullName: Steve Rogers
+                nickName: Steve
+                profileImage: https://picsum.photos/200
+                dateOfBirth: 2002-02-08T23:28:56.782Z
+                mobile: 9876543210
+                country: India
+                occupation: UI/UX Designer
+      responses:
+        '200':
+          description: user object
+          content:
+            application/json: {}
+    get:
+      tags:
+        - Users
+      security:
+        - userAuth: []
+      responses:
+        '200':
+          description: User profile object
+          content:
+            application/json: {}
+    put:
+      tags:
+        - Users
+      security:
+        - userAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                fullName:
+                  type: string
+                nickName:
+                  type: string
+                profileImage:
+                  type: string
+                dateOfBirth:
+                  type: string
+                  format: date
+                mobile:
+                  type: number
+                country:
+                  type: string
+                occupation:
+                  type: string
+              example:
+                fullName: Steve Rogers
+                nickName: Steve
+                profileImage: https://picsum.photos/200
+                dateOfBirth: 2002-02-08T23:28:56.782Z
+                mobile: 9876543210
+                country: United States
+                occupation: Backend Developer
+      responses:
+        '200':
+          description: updated User profile object
+          content:
+            application/json: {}
+    delete:
+      tags:
+        - Users
+      security:
+        - userAuth: []
+      responses:
+        '200':
+          description: empty object
+          content:
+            application/json: {}
+  /users/toggle-notifications:
+    patch:
+      tags:
+        - Users
+      security:
+        - userAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                isEnabled:
+                  type: boolean
+              required:
+                - isEnabled
+              example:
+                isEnabled: false
+      responses:
+        '200':
+          description: isEnabled field
+          content:
+            application/json: {}
