@@ -207,6 +207,7 @@ paths:
                   - nickName
                   - profileImage
                   - mobile
+                  - gender
                   - country
                   - occupation
               example:
@@ -253,6 +254,9 @@ paths:
                   type: string
                 mobile:
                   type: number
+                gender:
+                  type: string
+                  enum: [male, female, other]
                 country:
                   type: string
                 occupation:

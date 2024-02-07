@@ -70,6 +70,7 @@ exports.getFullUserById = async (userId, userData) => {
                   profileImage: 1,
                   email: 1,
                   mobile: 1,
+                  gender: 1,
                   country: 1,
                   occupation: 1,
               }
@@ -91,6 +92,7 @@ exports.getFullUserExcludingId = async (userId, userData) => {
                   profileImage: 1,
                   email: 1,
                   mobile: 1,
+                  gender: 1,
                   country: 1,
                   occupation: 1,
                   _id: 0,

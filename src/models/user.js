@@ -25,6 +25,10 @@ const userSchema = new Schema(
             type: Number,
             unique: true,
         },
+        gender: {
+            type: String,
+            enum: ['male', 'female', 'other'],
+        },
         country: {
             type: String,
         },
