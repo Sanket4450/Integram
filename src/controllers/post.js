@@ -42,7 +42,7 @@ exports.addPost = catchAsyncErrors(async (req, res) => {
     const { _id, caption, imgURL } = await postService.addPost(user._id, body)
 
     const post = {
-        id: _id,
+        postId: _id,
         caption,
         imgURL,
     }
@@ -84,6 +84,40 @@ exports.toogleLike = catchAsyncErrors(async (req, res) => {
     )
 })
 
+exports.getComments = catchAsyncErrors(async (req, res) => {
+    const { postId } = req.params
+
+    const user = await userService.getUserById(req.user.sub)
+
+    if (!user) {
+        throw new ApiError(
+            constant.MESSAGES.USER_NOT_FOUND,
+            httpStatus.NOT_FOUND
+        )
+    }
+
+    if (!(await postService.getPostById(postId))) {
+        throw new ApiError(
+            constant.MESSAGES.POST_NOT_FOUND,
+            httpStatus.NOT_FOUND
+        )
+    }
+
+    const rawComments = await commentService.getComments(postId)
+
+    const comments = rawComments.map((comment) => ({
+        commentId: comment._id,
+        text: comment.text,
+    }))
+
+    return sendResponse(
+        res,
+        httpStatus.OK,
+        { comments },
+        'Comments fetched successfully'
+    )
+})
+
 exports.addComment = catchAsyncErrors(async (req, res) => {
     const body = req.body
 
@@ -103,9 +137,9 @@ exports.addComment = catchAsyncErrors(async (req, res) => {
         )
     }
 
-    const { text } = await commentService.addComment(user._id, body)
+    const { _id, text } = await commentService.addComment(user._id, body)
 
-    const comment = { text }
+    const comment = { commentId: _id, text }
 
     return sendResponse(
         res,
@@ -165,9 +199,9 @@ exports.replyComment = catchAsyncErrors(async (req, res) => {
         )
     }
 
-    const { text } = await commentService.replyComment(user._id, body)
+    const { _id, text } = await commentService.replyComment(user._id, body)
 
-    const comment = { text }
+    const comment = { commentId: _id, text }
 
     return sendResponse(
         res,

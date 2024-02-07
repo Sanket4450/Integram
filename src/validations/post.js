@@ -31,6 +31,12 @@ const toogleLike = {
     }),
 }
 
+const getComments = {
+    params: joi.object().keys({
+        postId: idReqValidation,
+    }),
+}
+
 const addComment = {
     body: joi.object().keys({
         postId: idReqValidation,
@@ -59,6 +65,7 @@ module.exports = {
     getPosts,
     addPost,
     toogleLike,
+    getComments,
     addComment,
     deleteComment,
     replyComment,

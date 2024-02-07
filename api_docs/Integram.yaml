@@ -20,6 +20,7 @@ components:
 tags:
   - name: Auth
   - name: Users
+  - name: Posts
 paths:
   /auth/register:
     post:
@@ -95,27 +96,6 @@ paths:
           description: Success response with reset Token
           content:
             application/json: {}
-  /auth/forgot-password/mobile:
-    post:
-      tags:
-        - Auth
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                mobile: number
-                format: mobile
-              required:
-                - mobile
-              example:
-                mobile: 9876543210
-      responses:
-        '200':
-          description: Success response with reset Token
-          content:
-            application/json: {}
   /auth/verify-reset-otp:
     post:
       tags:
@@ -162,17 +142,6 @@ paths:
                 - password
               example:
                 password: user5678
-      responses:
-        '200':
-          description: Success response
-          content:
-            application/json: {}
-  /auth/logout:
-    post:
-      tags:
-        - Auth
-      security:
-        - userAuth: []
       responses:
         '200':
           description: Success response
@@ -281,5 +250,182 @@ paths:
       responses:
         '200':
           description: empty object
+          content:
+            application/json: {}
+  /posts:
+    get:
+      tags:
+        - Posts
+      security:
+        - userAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          description: page number for posts
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 10
+          description: number of posts per page
+      responses:
+        '200':
+          description: posts array
+          content:
+            application/json: {}
+    post:
+      tags:
+        - Posts
+      security:
+        - userAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                caption:
+                  type: string
+                imgURL:
+                  type: string
+              required:
+                - imgURL
+              example:
+                caption: Visited New Mexico last week
+                imgURL: https://picsum.photos/300
+      responses:
+        '200':
+          description: post object
+          content:
+            application/json: {}
+  /posts/toggle-like:
+    post:
+      tags:
+        - Posts
+      security:
+        - userAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                postId:
+                  type: string
+                  format: objectId
+                isLiked:
+                  type: boolean
+              required:
+                - postId
+                - isLiked
+              example:
+                postId: post-object-id
+                isLiked: true
+      responses:
+        '200':
+          description: isLiked field
+          content:
+            application/json: {}
+  /posts/comments/{postId}:
+    get:
+      tags:
+        - Posts
+      security:
+        - userAuth: []
+      parameters:
+        - name: postId
+          in: path
+          schema:
+            type: string
+            format: objectId
+          required: true
+          description: postId for comments
+      responses:
+        '200':
+          description: comments array
+          content:
+            application/json: {}
+  /posts/comment:
+    post:
+      tags:
+        - Posts
+      security:
+        - userAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                postId:
+                  type: string
+                  format: objectId
+                text:
+                  type: string
+              required:
+                - postId
+                - text
+              example:
+                postId: post-object-id
+                text: Great! Keep it up
+      responses:
+        '200':
+          description: comment object
+          content:
+            application/json: {}
+    delete:
+      tags:
+        - Posts
+      security:
+        - userAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                commentId:
+                  type: string
+                  format: objectId
+              required:
+                - commentId
+              example:
+                commentId: comment-object-id
+      responses:
+        '200':
+          description: empty object
+          content:
+            application/json: {}
+  /posts/comment/reply:
+    post:
+      tags:
+        - Posts
+      security:
+        - userAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                commentId:
+                  type: string
+                  format: objectId
+                text:
+                  type: string
+              required:
+                - commentId
+                - text
+              example:
+                commentId: comment-object-id
+                text: Yeah! Really nice
+      responses:
+        '200':
+          description: comment object
           content:
             application/json: {}

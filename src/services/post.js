@@ -70,7 +70,7 @@ exports.getPosts = async ({ page, limit }) => {
                 likesCount: 1,
                 commentsCount: 1,
                 _id: 0,
-                id: '$_id',
+                postId: '$_id',
             },
         },
     ]

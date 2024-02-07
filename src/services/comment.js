@@ -29,6 +29,18 @@ exports.getUserCommentById = async (commentId, userId) => {
     return dbRepo.findOne(constant.COLLECTIONS.COMMENT, { query, data })
 }
 
+exports.getComments = async (postId) => {
+    const query = {
+        postId: new mongoose.Types.ObjectId(postId),
+    }
+
+    const data = {
+        text: 1,
+    }
+
+    return dbRepo.find(constant.COLLECTIONS.COMMENT, { query, data })
+}
+
 exports.addComment = async (userId, commentBody) => {
     try {
         console.info('Inside addComment')
@@ -164,11 +176,11 @@ exports.replyComment = async (userId, { commentId, text }) => {
     try {
         console.info('Inside replyComment')
 
-        const reply = await createReplyComment(userId, text)
+        const { _id } = await createReplyComment(userId, text)
 
-        await addReplyComment(commentId, reply._id)
+        await addReplyComment(commentId, _id)
 
-        return { text }
+        return { _id, text }
     } catch (error) {
         console.error(`replyComment error => ${error}`)
 

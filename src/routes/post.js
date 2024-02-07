@@ -25,6 +25,13 @@ router.post(
     postController.toogleLike
 )
 
+router.get(
+    '/comments/:postId',
+    authChecker,
+    validate(postValidation.getComments),
+    postController.getComments
+)
+
 router.post(
     '/comment',
     authChecker,
