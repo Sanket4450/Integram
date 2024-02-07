@@ -111,8 +111,8 @@ exports.toggleLike = async (userId, postBody) => {
         console.info('Inside toggleLike')
 
         postBody.isLiked
-            ? await likePost(postBody.post, userId)
-            : await unlikePost(postBody.post, userId)
+            ? await likePost(postBody.postId, userId)
+            : await unlikePost(postBody.postId, userId)
 
         return { isLiked: postBody.isLiked }
     } catch (error) {

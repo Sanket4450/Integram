@@ -14,6 +14,7 @@ module.exports = {
         INVALID_SECRET: 'Invalid admin secret, admin authentication failed!',
         NOT_ALLOWED: 'You are not allowed to access this resource',
         PROFILE_ALREADY_CREATED: 'Profile already created',
+        POST_NOT_FOUND: 'Post not found for this postId',
     },
 
     COLLECTIONS: {

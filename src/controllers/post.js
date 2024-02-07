@@ -67,7 +67,7 @@ exports.toogleLike = catchAsyncErrors(async (req, res) => {
         )
     }
 
-    if (!(await postService.getPostById(body.post))) {
+    if (!(await postService.getPostById(body.postId))) {
         throw new ApiError(
             constant.MESSAGES.POST_NOT_FOUND,
             httpStatus.NOT_FOUND

@@ -20,6 +20,7 @@ router.post(
 
 router.post(
     '/toggle-like',
+    authChecker,
     validate(postValidation.toogleLike),
     postController.toogleLike
 )
