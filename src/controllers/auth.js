@@ -60,19 +60,6 @@ exports.forgotPasswordWithEmail = catchAsyncErrors(async (req, res) => {
     )
 })
 
-exports.forgotPasswordWithMobile = catchAsyncErrors(async (req, res) => {
-    const resetToken = await authService.forgotPasswordWithMobile(req.body.mobile)
-
-    // send an otp on the mobile (ex. 1234)
-
-    return sendResponse(
-        res,
-        httpStatus.OK,
-        { resetToken },
-        'Forgot password successfull'
-    )
-})
-
 exports.verifyResetOtp = catchAsyncErrors(async (req, res) => {
     const { token, otp } = req.body
 
@@ -96,22 +83,5 @@ exports.resetPassword = catchAsyncErrors(async (req, res) => {
         httpStatus.OK,
         {},
         'Password updated successfully'
-    )
-})
-
-exports.logout = catchAsyncErrors(async (req, res) => {
-    const user = await userService.getUserById(req.user.sub)
-
-    if (!user) {
-        throw new ApiError(constant.MESSAGES.USER_NOT_FOUND, httpStatus.NOT_FOUND)
-    }
-
-    await userService.updateUser(user._id, { token: null })
-
-    return sendResponse(
-        res,
-        httpStatus.OK,
-        {},
-        'User has logged-out successfully'
     )
 })

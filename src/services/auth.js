@@ -49,24 +49,6 @@ exports.forgotPasswordWithEmail = async (email) => {
     return resetToken
 }
 
-exports.forgotPasswordWithMobile = async (mobile) => {
-    console.info(`Inside forgotPasswordWithMobile => mobile = ${mobile}`)
-
-    const user = await userService.getUserByMobile(mobile)
-
-    if (!user) {
-        throw new ApiError(constant.MESSAGES.USER_NOT_EXIST, httpStatus.NOT_FOUND)
-    }
-
-    const resetToken = tokenService.generateToken({
-        payload: { sub: user._id },
-        secret: process.env.RESET_TOKEN_SECRET,
-        options: { expiresIn: process.env.RESET_TOKEN_EXPIRY }
-    })
-
-    return resetToken
-}
-
 exports.verifyResetOtp = async ({ token, otp }) => {
     console.info('Inside verifyResetOtp')
 
