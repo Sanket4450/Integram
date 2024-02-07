@@ -12,9 +12,10 @@ module.exports = {
         INVALID_TOKEN: 'Invalid token or signature',
         TOKEN_EXPIRED: 'Token has expired',
         INVALID_SECRET: 'Invalid admin secret, admin authentication failed!',
-        NOT_ALLOWED: 'You are not allowed to access this resource',
+        NOT_ALLOWED: 'You are not allowed to access or modify this resource',
         PROFILE_ALREADY_CREATED: 'Profile already created',
         POST_NOT_FOUND: 'Post not found for this postId',
+        COMMENT_NOT_FOUND: 'Comment not found for this commentId',
     },
 
     COLLECTIONS: {

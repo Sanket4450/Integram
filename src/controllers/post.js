@@ -114,3 +114,34 @@ exports.addComment = catchAsyncErrors(async (req, res) => {
         'Comment posted successfully'
     )
 })
+
+exports.deleteComment = catchAsyncErrors(async (req, res) => {
+    const { commentId } = req.body
+
+    const user = await userService.getUserById(req.user.sub)
+
+    if (!user) {
+        throw new ApiError(
+            constant.MESSAGES.USER_NOT_FOUND,
+            httpStatus.NOT_FOUND
+        )
+    }
+
+    if (!(await commentService.getCommentById(commentId))) {
+        throw new ApiError(
+            constant.MESSAGES.COMMENT_NOT_FOUND,
+            httpStatus.NOT_FOUND
+        )
+    }
+
+    if (!(await commentService.getUserCommentById(commentId, user._id))) {
+        throw new ApiError(
+            constant.MESSAGES.NOT_ALLOWED,
+            httpStatus.FORBIDDEN
+        )
+    }
+
+    await commentService.deleteComment(commentId, user._id)
+
+    return sendResponse(res, httpStatus.OK, {}, 'Comment deleted successfully')
+})

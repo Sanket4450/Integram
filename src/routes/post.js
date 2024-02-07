@@ -32,4 +32,11 @@ router.post(
     postController.addComment
 )
 
+router.delete(
+    '/delete-comment',
+    authChecker,
+    validate(postValidation.deleteComment),
+    postController.deleteComment
+)
+
 module.exports = router
