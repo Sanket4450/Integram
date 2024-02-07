@@ -25,4 +25,11 @@ router.post(
     postController.toogleLike
 )
 
+router.post(
+    '/add-comment',
+    authChecker,
+    validate(postValidation.addComment),
+    postController.addComment
+)
+
 module.exports = router

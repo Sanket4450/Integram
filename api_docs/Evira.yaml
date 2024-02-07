@@ -283,26 +283,3 @@ paths:
           description: empty object
           content:
             application/json: {}
-  /users/toggle-notifications:
-    patch:
-      tags:
-        - Users
-      security:
-        - userAuth: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                isEnabled:
-                  type: boolean
-              required:
-                - isEnabled
-              example:
-                isEnabled: false
-      responses:
-        '200':
-          description: isEnabled field
-          content:
-            application/json: {}
