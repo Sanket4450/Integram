@@ -6,6 +6,33 @@ const constant = require('../constants')
 const ApiError = require('../utils/ApiError')
 const User = require('../models/user')
 
+exports.getPostById = async (postId) => {
+    const query = {
+        _id: new mongoose.Types.ObjectId(postId),
+    }
+
+    const data = {
+        _id: 1,
+    }
+
+    return dbRepo.findOne(constant.COLLECTIONS.POST, { query, data })
+}
+
+// exports.getPosts = async ({ page, limit }) => {
+//     console.info('Inside getPosts')
+
+//     page ||= 1
+//     limit ||= 10
+
+//     const query = {}
+
+//     const data = {
+
+//     }
+
+//     return dbRepo.findPage(constant.COLLECTIONS.POST, {}, {}, page, limit)
+// }
+
 exports.addPost = async (userId, postBody) => {
     try {
         console.info('Inside addPost')
@@ -19,6 +46,77 @@ exports.addPost = async (userId, postBody) => {
         return dbRepo.create(constant.COLLECTIONS.POST, { data })
     } catch (error) {
         console.error(`addPost error => ${error}`)
+
+        throw new ApiError(
+            constant.MESSAGES.SOMETHING_WENT_WRONG,
+            httpStatus.INTERNAL_SERVER_ERROR
+        )
+    }
+}
+
+const likePost = async (postId, userId) => {
+    try {
+        console.info('Inside likePost')
+
+        const query = {
+            _id: new mongoose.Types.ObjectId(postId),
+            likedBy: { $ne: new mongoose.Types.ObjectId(userId) },
+        }
+
+        const data = {
+            $push: {
+                likedBy: new mongoose.Types.ObjectId(userId),
+            },
+        }
+
+        return dbRepo.updateOne(constant.COLLECTIONS.POST, { query, data })
+    } catch (error) {
+        console.error(`likePost error => ${error}`)
+
+        throw new ApiError(
+            constant.MESSAGES.SOMETHING_WENT_WRONG,
+            httpStatus.INTERNAL_SERVER_ERROR
+        )
+    }
+}
+
+const unlikePost = async (postId, userId) => {
+    try {
+        console.info('Inside unlikePost')
+
+        const query = {
+            _id: new mongoose.Types.ObjectId(postId),
+            likedBy: { $eq: new mongoose.Types.ObjectId(userId) },
+        }
+
+        const data = {
+            $pull: {
+                likedBy: new mongoose.Types.ObjectId(userId),
+            },
+        }
+
+        return dbRepo.updateOne(constant.COLLECTIONS.POST, { query, data })
+    } catch (error) {
+        console.error(`unlikePost error => ${error}`)
+
+        throw new ApiError(
+            constant.MESSAGES.SOMETHING_WENT_WRONG,
+            httpStatus.INTERNAL_SERVER_ERROR
+        )
+    }
+}
+
+exports.toggleLike = async (userId, postBody) => {
+    try {
+        console.info('Inside toggleLike')
+
+        postBody.isLiked
+            ? await likePost(postBody.post, userId)
+            : await unlikePost(postBody.post, userId)
+
+        return { isLiked: postBody.isLiked }
+    } catch (error) {
+        console.error(`toggleLike error => ${error}`)
 
         throw new ApiError(
             constant.MESSAGES.SOMETHING_WENT_WRONG,

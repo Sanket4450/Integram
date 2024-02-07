@@ -2,11 +2,8 @@ const joi = require('joi')
 
 const {
     stringValidation,
-    dateValidation,
     numberValidation,
     stringReqValidation,
-    booleanReqValidation,
-    dateReqValidation,
     numberReqValidation,
 } = require('./common')
 
@@ -15,7 +12,6 @@ const postProfile = {
         fullName: stringReqValidation.max(30),
         nickName: stringReqValidation.max(15),
         profileImage: stringReqValidation,
-        dateOfBirth: dateReqValidation,
         mobile: numberReqValidation
             .min(10 ** 9)
             .max(10 ** 10 - 1)
@@ -34,7 +30,6 @@ const updateProfile = {
         fullName: stringValidation.max(30),
         nickName: stringValidation.max(15),
         profileImage: stringValidation,
-        dateOfBirth: dateValidation,
         mobile: numberValidation
             .min(10 ** 9)
             .max(10 ** 10 - 1)

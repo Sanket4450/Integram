@@ -8,7 +8,16 @@ const { userService, postService } = require('../services')
 exports.getPosts = catchAsyncErrors(async (req, res) => {
     const { page, limit } = req.query
 
-    const posts = await postService.getPosts({ page, limit })
+    const user = await userService.getUserById(req.user.sub)
+
+    if (!user) {
+        throw new ApiError(
+            constant.MESSAGES.USER_NOT_FOUND,
+            httpStatus.NOT_FOUND
+        )
+    }
+
+    // const posts = await postService.getPosts({ page, limit })
 
     return sendResponse(
         res,
@@ -43,5 +52,34 @@ exports.addPost = catchAsyncErrors(async (req, res) => {
         httpStatus.OK,
         { post },
         'Post created successfully'
+    )
+})
+
+exports.toogleLike = catchAsyncErrors(async (req, res) => {
+    const body = req.body
+
+    const user = await userService.getUserById(req.user.sub)
+
+    if (!user) {
+        throw new ApiError(
+            constant.MESSAGES.USER_NOT_FOUND,
+            httpStatus.NOT_FOUND
+        )
+    }
+
+    if (!(await postService.getPostById(body.post))) {
+        throw new ApiError(
+            constant.MESSAGES.POST_NOT_FOUND,
+            httpStatus.NOT_FOUND
+        )
+    }
+
+    const { isLiked } = await postService.toggleLike(user._id, body)
+
+    return sendResponse(
+        res,
+        httpStatus.OK,
+        { isLiked },
+        `Post ${isLiked ? 'liked' : 'disliked'} successfully`
     )
 })

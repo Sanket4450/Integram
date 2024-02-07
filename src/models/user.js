@@ -25,9 +25,6 @@ const userSchema = new Schema(
             type: Number,
             unique: true,
         },
-        dateOfBirth: {
-            type: Date,
-        },
         country: {
             type: String,
         },

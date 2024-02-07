@@ -18,10 +18,10 @@ router.post(
     postController.addPost
 )
 
-// router.post(
-//     '/toggle-like',
-//     validate(authValidation.login),
-//     authController.login
-// )
+router.post(
+    '/toggle-like',
+    validate(postValidation.toogleLike),
+    postController.toogleLike
+)
 
 module.exports = router
