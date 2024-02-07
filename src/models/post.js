@@ -9,7 +9,7 @@ const postSchema = new Schema(
         },
         caption: {
             type: String,
-            maxlength: 200,
+            maxLength: 200,
         },
         imgURL: {
             type: String,

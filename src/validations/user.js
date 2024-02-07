@@ -7,7 +7,7 @@ const {
     stringReqValidation,
     booleanReqValidation,
     dateReqValidation,
-    numberReqValidation
+    numberReqValidation,
 } = require('./common')
 
 const postProfile = {
@@ -16,13 +16,16 @@ const postProfile = {
         nickName: stringReqValidation.max(15),
         profileImage: stringReqValidation,
         dateOfBirth: dateReqValidation,
-        mobile: numberReqValidation.min(10 ** 9).max(10 ** 10 - 1).messages({
-            'number.min': 'Mobile number should be 10 digit',
-            'number.max': 'Mobile number should be 10 digit'
-        }),
+        mobile: numberReqValidation
+            .min(10 ** 9)
+            .max(10 ** 10 - 1)
+            .messages({
+                'number.min': 'Mobile number should be 10 digit',
+                'number.max': 'Mobile number should be 10 digit',
+            }),
         country: stringReqValidation,
-        occupation: stringReqValidation
-    })
+        occupation: stringReqValidation,
+    }),
 }
 
 const updateProfile = {
@@ -32,23 +35,19 @@ const updateProfile = {
         nickName: stringValidation.max(15),
         profileImage: stringValidation,
         dateOfBirth: dateValidation,
-        mobile: numberValidation.min(10 ** 9).max(10 ** 10 - 1).messages({
-            'number.min': 'Mobile number should be 10 digit',
-            'number.max': 'Mobile number should be 10 digit'
-        }),
+        mobile: numberValidation
+            .min(10 ** 9)
+            .max(10 ** 10 - 1)
+            .messages({
+                'number.min': 'Mobile number should be 10 digit',
+                'number.max': 'Mobile number should be 10 digit',
+            }),
         country: stringValidation,
-        occupation: stringValidation
-    })
-}
-
-const toggleNotifications = {
-    body: joi.object().keys({
-        isEnabled: booleanReqValidation
-    })
+        occupation: stringValidation,
+    }),
 }
 
 module.exports = {
     postProfile,
     updateProfile,
-    toggleNotifications,
 }

@@ -17,6 +17,8 @@ module.exports = {
     },
 
     COLLECTIONS: {
-        USER: 'User'
-    }
+        USER: 'User',
+        POST: 'Post',
+        COMMENT: 'Comment',
+    },
 }

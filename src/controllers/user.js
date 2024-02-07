@@ -3,9 +3,7 @@ const catchAsyncErrors = require('../utils/catchAsyncErrors')
 const ApiError = require('../utils/ApiError')
 const constant = require('../constants')
 const sendResponse = require('../utils/responseHandler')
-const {
-    userService
-} = require('../services')
+const { userService } = require('../services')
 
 exports.postProfile = catchAsyncErrors(async (req, res) => {
     const body = req.body
@@ -13,14 +11,23 @@ exports.postProfile = catchAsyncErrors(async (req, res) => {
     let user = await userService.getisProfileCompletedByUserId(req.user.sub)
 
     if (!user) {
-        throw new ApiError(constant.MESSAGES.USER_NOT_EXIST, httpStatus.NOT_FOUND)
+        throw new ApiError(
+            constant.MESSAGES.USER_NOT_EXIST,
+            httpStatus.NOT_FOUND
+        )
     }
 
     if (user.isProfileCompleted) {
-        throw new ApiError(constant.MESSAGES.PROFILE_ALREADY_CREATED, httpStatus.BAD_REQUEST)
+        throw new ApiError(
+            constant.MESSAGES.PROFILE_ALREADY_CREATED,
+            httpStatus.BAD_REQUEST
+        )
     }
 
-    await userService.updateUser(user._id, { ...body, isProfileCompleted: true })
+    await userService.updateUser(user._id, {
+        ...body,
+        isProfileCompleted: true,
+    })
 
     // const notificationBody = {
     //     title: 'Account Setup Successfull!',
@@ -44,7 +51,10 @@ exports.getProfile = catchAsyncErrors(async (req, res) => {
     const user = await userService.getFullUserExcludingId(req.user.sub)
 
     if (!user) {
-        throw new ApiError(constant.MESSAGES.USER_NOT_FOUND, httpStatus.NOT_FOUND)
+        throw new ApiError(
+            constant.MESSAGES.USER_NOT_FOUND,
+            httpStatus.NOT_FOUND
+        )
     }
 
     return sendResponse(
@@ -58,10 +68,13 @@ exports.getProfile = catchAsyncErrors(async (req, res) => {
 exports.updateProfile = catchAsyncErrors(async (req, res) => {
     const body = req.body
 
-    let user = await userService.getFullUserById(req.user.sub)
+    let user = await userService.getUserById(req.user.sub)
 
     if (!user) {
-        throw new ApiError(constant.MESSAGES.USER_NOT_FOUND, httpStatus.NOT_FOUND)
+        throw new ApiError(
+            constant.MESSAGES.USER_NOT_FOUND,
+            httpStatus.NOT_FOUND
+        )
     }
 
     await userService.updateUser(user._id, body)
@@ -77,37 +90,16 @@ exports.updateProfile = catchAsyncErrors(async (req, res) => {
 })
 
 exports.deleteProfile = catchAsyncErrors(async (req, res) => {
-    const user = await userService.getFullUserById(req.user.sub)
+    const user = await userService.getUserById(req.user.sub)
 
     if (!user) {
-        throw new ApiError(constant.MESSAGES.USER_NOT_FOUND, httpStatus.NOT_FOUND)
+        throw new ApiError(
+            constant.MESSAGES.USER_NOT_FOUND,
+            httpStatus.NOT_FOUND
+        )
     }
 
     await userService.deleteUserById(user._id)
 
-    return sendResponse(
-        res,
-        httpStatus.OK,
-        {},
-        'Profile deleted successfully'
-    )
-})
-
-exports.toggleNotifications = catchAsyncErrors(async (req, res) => {
-    const { isEnabled } = req.body
-
-    const user = await userService.getUserById(req.user.sub)
-
-    if (!user) {
-        throw new ApiError(constant.MESSAGES.USER_NOT_FOUND, httpStatus.NOT_FOUND)
-    }
-
-    await userService.updateUser(user._id, { isNotificationEnabled: isEnabled })
-
-    return sendResponse(
-        res,
-        httpStatus.OK,
-        { isEnabled },
-        `Notifications ${isEnabled ? 'enabled' : 'disabled'} successfully`
-    )
+    return sendResponse(res, httpStatus.OK, {}, 'Profile deleted successfully')
 })

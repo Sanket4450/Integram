@@ -11,7 +11,10 @@ exports.checkUserWithEmail = async (email) => {
     const user = await userService.getUserByEmail(email)
 
     if (user) {
-        throw new ApiError(constant.MESSAGES.USER_ALREADY_EXISTS, httpStatus.CONFLICT)
+        throw new ApiError(
+            constant.MESSAGES.USER_ALREADY_EXISTS,
+            httpStatus.CONFLICT
+        )
     }
     console.info('User not found inside checkUserWithEmail')
 }
@@ -22,11 +25,17 @@ exports.loginWithEmailAndPassword = async (email, password) => {
     const user = await userService.getUserByEmail(email)
 
     if (!user) {
-        throw new ApiError(constant.MESSAGES.USER_NOT_EXIST, httpStatus.NOT_FOUND)
+        throw new ApiError(
+            constant.MESSAGES.USER_NOT_EXIST,
+            httpStatus.NOT_FOUND
+        )
     }
 
     if (!(await bcrypt.compare(password, user.password))) {
-        throw new ApiError(constant.MESSAGES.INCORRECT_PASSWROD, httpStatus.FORBIDDEN)
+        throw new ApiError(
+            constant.MESSAGES.INCORRECT_PASSWROD,
+            httpStatus.FORBIDDEN
+        )
     }
     return user
 }
@@ -37,13 +46,16 @@ exports.forgotPasswordWithEmail = async (email) => {
     const user = await userService.getUserByEmail(email)
 
     if (!user) {
-        throw new ApiError(constant.MESSAGES.USER_NOT_EXIST, httpStatus.NOT_FOUND)
+        throw new ApiError(
+            constant.MESSAGES.USER_NOT_EXIST,
+            httpStatus.NOT_FOUND
+        )
     }
 
     const resetToken = tokenService.generateToken({
         payload: { sub: user._id },
         secret: process.env.RESET_TOKEN_SECRET,
-        options: { expiresIn: process.env.RESET_TOKEN_EXPIRY }
+        options: { expiresIn: process.env.RESET_TOKEN_EXPIRY },
     })
 
     return resetToken
@@ -60,12 +72,18 @@ exports.verifyResetOtp = async ({ token, otp }) => {
     const user = await userService.getUserById(sub)
 
     if (!user) {
-        throw new ApiError(constant.MESSAGES.USER_NOT_EXIST, httpStatus.CONFLICT)
+        throw new ApiError(
+            constant.MESSAGES.USER_NOT_EXIST,
+            httpStatus.CONFLICT
+        )
     }
 
     // verify otp sent to the email or mobile (ex. 1234)
     if (otp != 1234) {
-        throw new ApiError(constant.MESSAGES.INCORRECT_OTP, httpStatus.FORBIDDEN)
+        throw new ApiError(
+            constant.MESSAGES.INCORRECT_OTP,
+            httpStatus.FORBIDDEN
+        )
     }
 }
 
