@@ -5,15 +5,16 @@ const commentSchema = new Schema(
         postId: {
             type: Schema.Types.ObjectId,
             ref: 'Post',
-            required: true,
         },
         user: {
             type: Schema.Types.ObjectId,
             ref: 'User',
+            required: true,
         },
         text: {
             type: String,
             maxLength: 100,
+            required: true,
         },
         replies: [
             {

@@ -57,6 +57,19 @@ class DbRepo {
         })
     }
 
+    static deleteMany(collectionName, queryObject) {
+        return new Promise((resolve, reject) => {
+            domain[collectionName]
+                .deleteMany(queryObject.query)
+                .then((results) => {
+                    resolve(results)
+                })
+                .catch((error) => {
+                    reject(error)
+                })
+        })
+    }
+
     static find(collectionName, queryObject, sortQuery = {}) {
         return new Promise((resolve, reject) => {
             domain[collectionName]

@@ -16,10 +16,12 @@ const userSchema = new Schema(
             trim: true,
             lowercase: true,
             unique: true,
+            required: true,
         },
         password: {
             type: String,
             trim: true,
+            required: true,
         },
         mobile: {
             type: Number,
@@ -47,6 +49,7 @@ const userSchema = new Schema(
         isProfileCompleted: {
             type: Boolean,
             default: false,
+            required: true,
         },
         token: {
             type: String,

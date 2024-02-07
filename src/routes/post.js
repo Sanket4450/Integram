@@ -26,17 +26,24 @@ router.post(
 )
 
 router.post(
-    '/add-comment',
+    '/comment',
     authChecker,
     validate(postValidation.addComment),
     postController.addComment
 )
 
 router.delete(
-    '/delete-comment',
+    '/comment',
     authChecker,
     validate(postValidation.deleteComment),
     postController.deleteComment
+)
+
+router.post(
+    '/comment/reply',
+    authChecker,
+    validate(postValidation.replyComment),
+    postController.replyComment
 )
 
 module.exports = router
