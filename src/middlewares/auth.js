@@ -11,7 +11,10 @@ const authChecker = async (req, _, next) => {
             req.headers && req.headers.authorization
                 ? req.headers.authorization.split(' ')[1]
                 : ''
-        const decoded = await tokenService.verifyToken(token, process.env.ACCESS_TOKEN_SECRET)
+        const decoded = await tokenService.verifyDBToken(
+            token,
+            process.env.ACCESS_TOKEN_SECRET
+        )
         req.user = decoded
         next()
     } catch (error) {

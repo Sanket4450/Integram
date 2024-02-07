@@ -8,28 +8,79 @@ const generateToken = ({ payload, secret, options }) => {
     return jwt.sign(payload, secret, options)
 }
 
-const verifyToken = (token, secret) => {
+const verifyDBToken = (token, secret) => {
     if (!token) {
-        throw new ApiError(constant.MESSAGES.TOKEN_IS_REQUIRED, httpStatus.FORBIDDEN)
+        throw new ApiError(
+            constant.MESSAGES.TOKEN_IS_REQUIRED,
+            httpStatus.FORBIDDEN
+        )
     }
     return new Promise((resolve, reject) => {
         jwt.verify(token, secret, (err, decoded) => {
             if (err) {
                 if (err.name === 'JsonWebTokenError') {
-                    reject(new ApiError(constant.MESSAGES.INVALID_TOKEN, httpStatus.UNAUTHORIZED))
+                    reject(
+                        new ApiError(
+                            constant.MESSAGES.INVALID_TOKEN,
+                            httpStatus.UNAUTHORIZED
+                        )
+                    )
                 }
                 if (err.name === 'TokenExpiredError') {
-                    reject(new ApiError(constant.MESSAGES.TOKEN_EXPIRED, httpStatus.NOT_ACCEPTABLE))
+                    reject(
+                        new ApiError(
+                            constant.MESSAGES.TOKEN_EXPIRED,
+                            httpStatus.NOT_ACCEPTABLE
+                        )
+                    )
                 }
                 reject(new ApiError(err.message, httpStatus.UNAUTHORIZED))
             } else {
                 userService.getTokenByUserId(decoded.sub).then((user) => {
                     if (user && user.token !== token) {
-                        reject(new ApiError(constant.MESSAGES.INVALID_TOKEN, httpStatus.UNAUTHORIZED))
+                        reject(
+                            new ApiError(
+                                constant.MESSAGES.INVALID_TOKEN,
+                                httpStatus.UNAUTHORIZED
+                            )
+                        )
                     }
                     resolve(decoded)
                 })
             }
+        })
+    })
+}
+
+const verifyToken = (token, secret) => {
+    if (!token) {
+        throw new ApiError(
+            constant.MESSAGES.TOKEN_IS_REQUIRED,
+            httpStatus.FORBIDDEN
+        )
+    }
+    return new Promise((resolve, reject) => {
+        jwt.verify(token, secret, (err, decoded) => {
+            if (err) {
+                if (err.name === 'JsonWebTokenError') {
+                    reject(
+                        new ApiError(
+                            constant.MESSAGES.INVALID_TOKEN,
+                            httpStatus.UNAUTHORIZED
+                        )
+                    )
+                }
+                if (err.name === 'TokenExpiredError') {
+                    reject(
+                        new ApiError(
+                            constant.MESSAGES.TOKEN_EXPIRED,
+                            httpStatus.NOT_ACCEPTABLE
+                        )
+                    )
+                }
+                reject(new ApiError(err.message, httpStatus.UNAUTHORIZED))
+            }
+            resolve(decoded)
         })
     })
 }
@@ -39,12 +90,12 @@ const generateAuthToken = async (userId, role = 'user') => {
 
     const payload = {
         sub: userId,
-        role
+        role,
     }
     const token = generateToken({
         payload,
         secret: process.env.ACCESS_TOKEN_SECRET,
-        options: {}
+        options: {},
     })
 
     await userService.updateUser(userId, { token })
@@ -54,6 +105,7 @@ const generateAuthToken = async (userId, role = 'user') => {
 
 module.exports = {
     generateToken,
+    verifyDBToken,
     verifyToken,
-    generateAuthToken
+    generateAuthToken,
 }

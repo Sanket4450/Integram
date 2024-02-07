@@ -70,7 +70,10 @@ exports.forgotPasswordWithMobile = async (mobile) => {
 exports.verifyResetOtp = async ({ token, otp }) => {
     console.info('Inside verifyResetOtp')
 
-    const { sub } = await tokenService.verifyToken(token, process.env.RESET_TOKEN_SECRET)
+    const { sub } = await tokenService.verifyToken(
+        token,
+        process.env.RESET_TOKEN_SECRET
+    )
 
     const user = await userService.getUserById(sub)
 
@@ -87,7 +90,10 @@ exports.verifyResetOtp = async ({ token, otp }) => {
 exports.resetPassword = async ({ token, password }) => {
     console.info('Inside resetPassword')
 
-    const { sub } = await tokenService.verifyToken(token, process.env.RESET_TOKEN_SECRET)
+    const { sub } = await tokenService.verifyToken(
+        token,
+        process.env.RESET_TOKEN_SECRET
+    )
 
     await userService.updatePassword(sub, password)
 }
