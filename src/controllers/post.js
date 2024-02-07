@@ -17,7 +17,7 @@ exports.getPosts = catchAsyncErrors(async (req, res) => {
         )
     }
 
-    // const posts = await postService.getPosts({ page, limit })
+    const posts = await postService.getPosts({ page, limit })
 
     return sendResponse(
         res,

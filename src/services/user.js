@@ -106,6 +106,7 @@ exports.createUser = async (userBody) => {
         console.info('Inside createUser')
 
         userBody.password = await bcrypt.hash(userBody.password, 10)
+        userBody.profileImage ||= 'https://picsum.photos/200'
 
         return dbRepo.create(constant.COLLECTIONS.USER, { data: userBody })
     } catch (error) {

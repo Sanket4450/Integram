@@ -18,20 +18,65 @@ exports.getPostById = async (postId) => {
     return dbRepo.findOne(constant.COLLECTIONS.POST, { query, data })
 }
 
-// exports.getPosts = async ({ page, limit }) => {
-//     console.info('Inside getPosts')
+exports.getPosts = async ({ page, limit }) => {
+    console.info(`Inside getPosts => page = ${page}, limit = ${limit}`)
 
-//     page ||= 1
-//     limit ||= 10
+    page ||= 1
+    limit ||= 10
 
-//     const query = {}
+    const pipeline = [
+        {
+            $skip: (page - 1) * limit,
+        },
+        {
+            $limit: limit,
+        },
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'creator',
+                foreignField: '_id',
+                as: 'creator',
+            },
+        },
+        {
+            $unwind: {
+                path: '$creator',
+            },
+        },
+        {
+            $lookup: {
+                from: 'comments',
+                localField: '_id',
+                foreignField: 'postId',
+                as: 'comments',
+            },
+        },
+        {
+            $addFields: {
+                likesCount: { $size: '$likedBy' },
+                commentsCount: { $size: '$comments' },
+            },
+        },
+        {
+            $project: {
+                caption: 1,
+                imgURL: 1,
+                creator: {
+                    profileImage: 1,
+                    fullName: 1,
+                },
+                createdAt: 1,
+                likesCount: 1,
+                commentsCount: 1,
+                _id: 0,
+                id: '$_id',
+            },
+        },
+    ]
 
-//     const data = {
-
-//     }
-
-//     return dbRepo.findPage(constant.COLLECTIONS.POST, {}, {}, page, limit)
-// }
+    return dbRepo.aggregate(constant.COLLECTIONS.POST, pipeline)
+}
 
 exports.addPost = async (userId, postBody) => {
     try {
