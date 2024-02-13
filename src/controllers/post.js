@@ -17,7 +17,9 @@ exports.getPosts = catchAsyncErrors(async (req, res) => {
         )
     }
 
-    const posts = await postService.getPosts({ page, limit })
+    let posts = await postService.getPosts({ page, limit })
+
+    posts = await postService.validateLikedPosts(user._id, posts)
 
     return sendResponse(
         res,

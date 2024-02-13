@@ -1,10 +1,8 @@
 const mongoose = require('mongoose')
-const bcrypt = require('bcryptjs')
 const httpStatus = require('http-status')
 const dbRepo = require('../dbRepo')
 const constant = require('../constants')
 const ApiError = require('../utils/ApiError')
-const User = require('../models/user')
 
 exports.getPostById = async (postId) => {
     const query = {
@@ -168,4 +166,28 @@ exports.toggleLike = async (userId, postBody) => {
             httpStatus.INTERNAL_SERVER_ERROR
         )
     }
+}
+
+const checkPostLikedWithUserId = (postId, userId) => {
+    const query = {
+        _id: new mongoose.Types.ObjectId(postId),
+        likedBy: new mongoose.Types.ObjectId(userId),
+    }
+
+    const data = {
+        _id: 1,
+    }
+
+    return dbRepo.findOne(constant.COLLECTIONS.POST, { query, data })
+}
+
+exports.validateLikedPosts = async (userId, posts = []) => {
+    for (let post of posts) {
+        if (await checkPostLikedWithUserId(post.postId, userId)) {
+            post['isLiked'] = true
+        } else {
+            post['isLiked'] = false
+        }
+    }
+    return posts
 }
